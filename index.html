@@ -6,135 +6,739 @@
 <title>MT Social</title>
 
 <style>
-*{box-sizing:border-box}
-body{
+*{
+  box-sizing:border-box;
   margin:0;
-  font-family:Arial,sans-serif;
+  padding:0;
+}
+
+body{
+  font-family:Arial,Helvetica,sans-serif;
   background:#080a0d;
   color:#fff;
 }
-button,input,textarea{font:inherit}
-button{cursor:pointer}
+
+button{
+  border:0;
+  cursor:pointer;
+  font-family:inherit;
+}
 
 .app{
   max-width:600px;
   margin:auto;
   min-height:100vh;
   background:#080a0d;
+  padding-bottom:80px;
 }
 
-header{
+/* HEADER */
+.header{
   position:sticky;
   top:0;
   z-index:10;
+  height:62px;
   background:#0d1014;
-  border-bottom:1px solid #252932;
-  padding:16px;
+  border-bottom:1px solid #252930;
   display:flex;
-  justify-content:space-between;
   align-items:center;
+  justify-content:space-between;
+  padding:0 16px;
 }
 
 .logo{
-  font-size:22px;
-  font-weight:bold;
-  letter-spacing:2px;
+  font-size:25px;
+  font-weight:800;
+  letter-spacing:.5px;
 }
 
-.logo span{color:#c447e8}
+.logo span{
+  color:#36a3ff;
+}
 
-.header-btn{
-  border:0;
-  background:#20242c;
-  color:white;
+.header-icons{
+  display:flex;
+  gap:10px;
+}
+
+.icon-btn{
+  width:40px;
+  height:40px;
   border-radius:50%;
-  width:42px;
-  height:42px;
+  background:#191d23;
+  color:white;
   font-size:20px;
 }
 
-.screen{padding:18px}
+/* STORIES */
+.stories{
+  display:flex;
+  gap:12px;
+  overflow-x:auto;
+  padding:15px;
+  border-bottom:1px solid #20242a;
+}
 
-.auth{
-  min-height:100vh;
+.stories::-webkit-scrollbar{
+  display:none;
+}
+
+.story{
+  min-width:72px;
+  text-align:center;
+  font-size:12px;
+  color:#c9cdd3;
+}
+
+.story-img{
+  width:62px;
+  height:62px;
+  border-radius:50%;
+  padding:3px;
+  background:linear-gradient(135deg,#38a8ff,#9c4dff,#ff3d81);
+  margin:auto auto 6px;
+}
+
+.story-img div{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  background:#20252c;
   display:flex;
   align-items:center;
   justify-content:center;
-  padding:25px;
+  font-size:27px;
 }
 
-.auth-box{
-  width:100%;
-  background:#11151b;
-  border:1px solid #292e38;
-  border-radius:24px;
-  padding:25px;
-}
-
-.auth-title{
-  text-align:center;
-  font-size:32px;
-  font-weight:bold;
-  margin-bottom:8px;
-}
-
-.subtitle{
-  text-align:center;
-  color:#888f9b;
-  margin-bottom:25px;
-}
-
-.tabs{
-  display:flex;
-  background:#090b0f;
-  border-radius:12px;
-  padding:4px;
-  margin-bottom:20px;
-}
-
-.tabs button{
-  width:50%;
-  padding:12px;
-  border:0;
-  border-radius:9px;
-  background:transparent;
-  color:#888;
-}
-
-.tabs .active{
-  background:#252a34;
-  color:white;
-}
-
-.field{
-  margin-bottom:14px;
-}
-
-.field label{
-  display:block;
-  color:#aaa;
-  font-size:14px;
-  margin-bottom:7px;
-}
-
-.field input,.field textarea{
-  width:100%;
+/* CREATE POST */
+.create{
+  margin:15px;
+  background:#11151a;
+  border:1px solid #252a31;
+  border-radius:16px;
   padding:14px;
-  border-radius:12px;
-  border:1px solid #303641;
-  background:#090b0f;
+}
+
+.create-top{
+  display:flex;
+  gap:10px;
+  align-items:center;
+}
+
+.avatar{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#188cff,#8b45ff);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:20px;
+  flex-shrink:0;
+}
+
+.post-input{
+  flex:1;
+  background:#1b2026;
+  color:#aaa;
+  border-radius:22px;
+  padding:12px 15px;
+  border:0;
+  outline:0;
+}
+
+.create-actions{
+  display:flex;
+  justify-content:space-around;
+  margin-top:12px;
+  border-top:1px solid #272c32;
+  padding-top:11px;
+}
+
+.create-actions button{
+  background:transparent;
+  color:#cfd3d8;
+  font-size:14px;
+}
+
+/* POST */
+.post{
+  border-top:1px solid #20242a;
+  border-bottom:1px solid #20242a;
+  padding:15px;
+  background:#0b0e12;
+}
+
+.post-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.post-user{
+  flex:1;
+}
+
+.post-user strong{
+  display:block;
+  font-size:15px;
+}
+
+.post-user small{
+  color:#858b94;
+  font-size:12px;
+}
+
+.more{
+  background:transparent;
+  color:#aaa;
+  font-size:20px;
+}
+
+.post-text{
+  padding:13px 0;
+  line-height:1.5;
+  color:#e7e9ec;
+}
+
+.post-image{
+  width:100%;
+  min-height:220px;
+  border-radius:13px;
+  background:linear-gradient(135deg,#152b42,#29183d);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:55px;
+  margin-bottom:10px;
+}
+
+.post-stats{
+  display:flex;
+  justify-content:space-between;
+  color:#888f99;
+  font-size:13px;
+  padding:5px 2px 10px;
+}
+
+.post-actions{
+  display:flex;
+  border-top:1px solid #242930;
+  padding-top:8px;
+}
+
+.post-actions button{
+  flex:1;
+  background:transparent;
+  color:#bfc4ca;
+  padding:9px 3px;
+  font-size:14px;
+}
+
+.post-actions button:hover{
+  background:#181c21;
+  border-radius:8px;
+}
+
+.post-actions .liked{
+  color:#ff4d6d;
+}
+
+/* BOTTOM NAV */
+.bottom-nav{
+  position:fixed;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:min(600px,100%);
+  height:65px;
+  background:#101318;
+  border-top:1px solid #282d34;
+  display:flex;
+  justify-content:space-around;
+  align-items:center;
+  z-index:20;
+}
+
+.nav-btn{
+  background:transparent;
+  color:#8e949c;
+  font-size:22px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:3px;
+}
+
+.nav-btn span{
+  font-size:10px;
+}
+
+.nav-btn.active{
   color:#fff;
+}
+
+.add-btn{
+  width:46px;
+  height:46px;
+  border-radius:14px;
+  background:#278cff;
+  color:white;
+  font-size:28px;
+}
+
+/* MODAL */
+.modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.75);
+  z-index:50;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+}
+
+.modal-box{
+  width:min(500px,100%);
+  background:#11151a;
+  border:1px solid #30353d;
+  border-radius:18px;
+  padding:20px;
+}
+
+.modal-box h2{
+  margin-bottom:15px;
+}
+
+.modal-box textarea{
+  width:100%;
+  height:130px;
+  resize:none;
+  background:#1b2026;
+  color:#fff;
+  border:1px solid #30353d;
+  border-radius:12px;
+  padding:12px;
   outline:none;
 }
 
-.field textarea{
-  min-height:100px;
-  resize:none;
+.modal-buttons{
+  display:flex;
+  gap:10px;
+  margin-top:12px;
 }
 
-.primary{
-  width:100%;
-  border:0;
-  padding:14px;
-  border-radius:12px;
-  background:linear-gradient(90deg,#d23f91,#8d
+.modal-buttons button{
+  flex:1;
+  padding:12px;
+  border-radius:10px;
+}
+
+.cancel{
+  background:#252a31;
+  color:#fff;
+}
+
+.publish{
+  background:#278cff;
+  color:#fff;
+}
+
+/* TOAST */
+.toast{
+  position:fixed;
+  left:50%;
+  bottom:85px;
+  transform:translateX(-50%);
+  background:#fff;
+  color:#111;
+  padding:11px 18px;
+  border-radius:25px;
+  font-size:14px;
+  display:none;
+  z-index:100;
+  box-shadow:0 5px 25px rgba(0,0,0,.4);
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="logo">MT <span>Social</span></div>
+
+    <div class="header-icons">
+      <button class="icon-btn" onclick="showToast('Search जल्द आएगा 🔎')">⌕</button>
+      <button class="icon-btn" onclick="showToast('Notifications 🔔')">♧</button>
+    </div>
+  </header>
+
+  <!-- STORIES -->
+  <section class="stories">
+
+    <div class="story">
+      <div class="story-img">
+        <div>➕</div>
+      </div>
+      <span>Your Story</span>
+    </div>
+
+    <div class="story">
+      <div class="story-img">
+        <div>😎</div>
+      </div>
+      <span>Mohit</span>
+    </div>
+
+    <div class="story">
+      <div class="story-img">
+        <div>🔥</div>
+      </div>
+      <span>Friends</span>
+    </div>
+
+    <div class="story">
+      <div class="story-img">
+        <div>😂</div>
+      </div>
+      <span>Comedy</span>
+    </div>
+
+    <div class="story">
+      <div class="story-img">
+        <div>❤️</div>
+      </div>
+      <span>Love</span>
+    </div>
+
+  </section>
+
+  <!-- CREATE POST -->
+  <section class="create">
+
+    <div class="create-top">
+      <div class="avatar">M</div>
+
+      <button class="post-input" onclick="openPost()">
+        What's on your mind?
+      </button>
+    </div>
+
+    <div class="create-actions">
+      <button onclick="openPost()">📷 Photo</button>
+      <button onclick="openPost()">🎥 Video</button>
+      <button onclick="openPost()">😊 Feeling</button>
+    </div>
+
+  </section>
+
+  <!-- POST 1 -->
+  <article class="post">
+
+    <div class="post-head">
+      <div class="avatar">M</div>
+
+      <div class="post-user">
+        <strong>MT Social</strong>
+        <small>आज • Public 🌎</small>
+      </div>
+
+      <button class="more" onclick="showToast('Post options')">⋮</button>
+    </div>
+
+    <div class="post-text">
+      🎉 Welcome to <b>MT Social</b>!<br>
+      यहाँ अपनी बातें, फोटो और वीडियो शेयर करें।
+      <br><br>
+      ❤️ Connect • Share • Enjoy
+    </div>
+
+    <div class="post-image">
+      🚀
+    </div>
+
+    <div class="post-stats">
+      <span id="likes1">❤️ 12 Likes</span>
+      <span>3 Comments</span>
+    </div>
+
+    <div class="post-actions">
+      <button id="like1" onclick="likePost(1)">♡ Like</button>
+      <button onclick="showToast('Comment box जल्द आएगा 💬')">💬 Comment</button>
+      <button onclick="sharePost()">↗ Share</button>
+    </div>
+
+  </article>
+
+  <!-- POST 2 -->
+  <article class="post">
+
+    <div class="post-head">
+      <div class="avatar">😎</div>
+
+      <div class="post-user">
+        <strong>Mohit</strong>
+        <small>1 घंटे पहले • Public 🌎</small>
+      </div>
+
+      <button class="more" onclick="showToast('Post options')">⋮</button>
+    </div>
+
+    <div class="post-text">
+      आज का दिन शानदार है! 😎🔥
+      <br>
+      MT Social पर मिलते हैं।
+    </div>
+
+    <div class="post-image">
+      😎🔥
+    </div>
+
+    <div class="post-stats">
+      <span id="likes2">❤️ 8 Likes</span>
+      <span>2 Comments</span>
+    </div>
+
+    <div class="post-actions">
+      <button id="like2" onclick="likePost(2)">♡ Like</button>
+      <button onclick="showToast('Comment box जल्द आएगा 💬')">💬 Comment</button>
+      <button onclick="sharePost()">↗ Share</button>
+    </div>
+
+  </article>
+
+</div>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+
+  <button class="nav-btn active" onclick="goHome()">
+    🏠
+    <span>Home</span>
+  </button>
+
+  <button class="nav-btn" onclick="showToast('Friends section जल्द आएगा')">
+    👥
+    <span>Friends</span>
+  </button>
+
+  <button class="add-btn" onclick="openPost()">＋</button>
+
+  <button class="nav-btn" onclick="showToast('Messages जल्द आएगा')">
+    💬
+    <span>Messages</span>
+  </button>
+
+  <button class="nav-btn" onclick="showToast('Profile जल्द आएगा')">
+    👤
+    <span>Profile</span>
+  </button>
+
+</nav>
+
+<!-- POST MODAL -->
+<div class="modal" id="postModal">
+
+  <div class="modal-box">
+
+    <h2>Create Post</h2>
+
+    <textarea id="postText"
+      placeholder="आपके दिमाग में क्या चल रहा है?"></textarea>
+
+    <div class="modal-buttons">
+
+      <button class="cancel" onclick="closePost()">
+        Cancel
+      </button>
+
+      <button class="publish" onclick="publishPost()">
+        Publish
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+
+let liked = {
+  1:false,
+  2:false
+};
+
+function openPost(){
+  document.getElementById("postModal").style.display="flex";
+  document.getElementById("postText").focus();
+}
+
+function closePost(){
+  document.getElementById("postModal").style.display="none";
+}
+
+function publishPost(){
+
+  const text = document.getElementById("postText").value.trim();
+
+  if(!text){
+    showToast("पहले कुछ लिखें ✍️");
+    return;
+  }
+
+  const post = document.createElement("article");
+
+  post.className="post";
+
+  post.innerHTML=`
+
+    <div class="post-head">
+
+      <div class="avatar">M</div>
+
+      <div class="post-user">
+        <strong>Mohit</strong>
+        <small>अभी • Public 🌎</small>
+      </div>
+
+      <button class="more"
+        onclick="showToast('Post options')">⋮</button>
+
+    </div>
+
+    <div class="post-text">
+      ${escapeHTML(text)}
+    </div>
+
+    <div class="post-stats">
+      <span>❤️ 0 Likes</span>
+      <span>0 Comments</span>
+    </div>
+
+    <div class="post-actions">
+
+      <button onclick="this.classList.toggle('liked')">
+        ♡ Like
+      </button>
+
+      <button onclick="showToast('Comment box जल्द आएगा 💬')">
+        💬 Comment
+      </button>
+
+      <button onclick="sharePost()">
+        ↗ Share
+      </button>
+
+    </div>
+  `;
+
+  const app=document.querySelector(".app");
+
+  const create=document.querySelector(".create");
+
+  app.insertBefore(post,create.nextSibling);
+
+  document.getElementById("postText").value="";
+
+  closePost();
+
+  showToast("Post published 🎉");
+}
+
+function escapeHTML(text){
+
+  const div=document.createElement("div");
+
+  div.textContent=text;
+
+  return div.innerHTML;
+}
+
+function likePost(id){
+
+  liked[id]=!liked[id];
+
+  const button=document.getElementById("like"+id);
+  const count=document.getElementById("likes"+id);
+
+  let number = id===1 ? 12 : 8;
+
+  if(liked[id]){
+
+    number++;
+
+    button.classList.add("liked");
+    button.innerHTML="♥ Liked";
+
+  }else{
+
+    button.classList.remove("liked");
+    button.innerHTML="♡ Like";
+
+  }
+
+  count.innerHTML="❤️ "+number+" Likes";
+}
+
+function sharePost(){
+
+  if(navigator.share){
+
+    navigator.share({
+      title:"MT Social",
+      text:"MT Social पर यह पोस्ट देखें!"
+    }).catch(()=>{});
+
+  }else{
+
+    showToast("Share link तैयार है 🔗");
+
+  }
+}
+
+function goHome(){
+
+  window.scrollTo({
+    top:0,
+    behavior:"smooth"
+  });
+
+}
+
+function showToast(message){
+
+  const toast=document.getElementById("toast");
+
+  toast.innerHTML=message;
+
+  toast.style.display="block";
+
+  clearTimeout(window.toastTimer);
+
+  window.toastTimer=setTimeout(()=>{
+
+    toast.style.display="none";
+
+  },2000);
+
+}
+
+/* Make sure the app is visible immediately */
+document.addEventListener("DOMContentLoaded",function(){
+
+  document.body.style.visibility="visible";
+
+});
+
+</script>
+
+</body>
+        </html>
