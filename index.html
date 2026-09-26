@@ -269,7 +269,35 @@ header{
   border-radius:50%;
   font-size:25px;
 }
-</style>
+/* TOUCH FIX */
+.hidden{
+  display:none !important;
+}
+
+#authScreen{
+  position:relative !important;
+  z-index:99999 !important;
+  pointer-events:auto !important;
+}
+
+#authScreen *{
+  pointer-events:auto !important;
+}
+
+#loginForm,
+#signupForm,
+#loginTab,
+#signupTab,
+#authScreen input,
+#authScreen button{
+  position:relative !important;
+  z-index:100000 !important;
+  pointer-events:auto !important;
+}
+
+#appScreen.hidden{
+  display:none !important;
+}</style>
 </head>
 
 <body>
