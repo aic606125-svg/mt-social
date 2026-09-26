@@ -701,24 +701,25 @@ touch-action:manipulation;
     }
 
     .mt-auth-box input{
-      width:100%;
-      padding:15px;
-      margin:7px 0;
-      #mtAuthScreen input,
-#mtAuthScreen button{
-  pointer-events:auto !important;
-  position:relative;
-  z-index:1000002;
-  touch-action:manipulation;
+    width:100%;
+    padding:15px;
+    margin:7px 0;
+    border-radius:13px;
+    border:1px solid #303740;
+    background:#080a0d;
+    color:white;
+    font-size:16px;
+    outline:none;
+    box-sizing:border-box;
 }
-      border-radius:13px;
-      border:1px solid #303740;
-      background:#080a0d;
-      color:white;
-      font-size:16px;
-      outline:none;
-      box-sizing:border-box;
-    }
+
+#mtAuthScreen input,
+#mtAuthScreen button{
+    pointer-events:auto !important;
+    position:relative;
+    z-index:1000002;
+    touch-action:manipulation;
+}
 
     .mt-auth-btn{
       width:100%;
