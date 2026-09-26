@@ -630,3 +630,309 @@ checkSession();
 
 </body>
 </html>
+<!-- MT SOCIAL LOGIN / SIGNUP -->
+<script>
+(function () {
+  if (!window.supabase || !window.supabaseClient) {
+    console.error("Supabase client नहीं मिला");
+    return;
+  }
+
+  const sb = window.supabaseClient;
+
+  const authStyle = document.createElement("style");
+  authStyle.textContent = `
+    #mtAuthScreen{
+      position:fixed;
+      inset:0;
+      z-index:999999;
+      background:#080a0d;
+      color:white;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:20px;
+      font-family:Arial,Helvetica,sans-serif;
+    }
+
+    .mt-auth-box{
+      width:100%;
+      max-width:390px;
+      background:#11151a;
+      border:1px solid #252b32;
+      border-radius:24px;
+      padding:28px 22px;
+      box-shadow:0 20px 60px rgba(0,0,0,.5);
+    }
+
+    .mt-logo{
+      text-align:center;
+      font-size:34px;
+      font-weight:800;
+      margin-bottom:6px;
+    }
+
+    .mt-sub{
+      text-align:center;
+      color:#9aa4af;
+      margin-bottom:25px;
+    }
+
+    .mt-auth-box input{
+      width:100%;
+      padding:15px;
+      margin:7px 0;
+      border-radius:13px;
+      border:1px solid #303740;
+      background:#080a0d;
+      color:white;
+      font-size:16px;
+      outline:none;
+      box-sizing:border-box;
+    }
+
+    .mt-auth-btn{
+      width:100%;
+      padding:15px;
+      margin-top:12px;
+      border:0;
+      border-radius:13px;
+      background:#1877f2;
+      color:white;
+      font-size:17px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+
+    .mt-switch{
+      text-align:center;
+      margin-top:18px;
+      color:#9aa4af;
+    }
+
+    .mt-switch button,
+    .mt-forgot{
+      background:none;
+      border:0;
+      color:#4da3ff;
+      font-size:15px;
+      cursor:pointer;
+    }
+
+    #mtAuthMsg{
+      min-height:22px;
+      margin-top:15px;
+      text-align:center;
+      color:#ffcc66;
+      font-size:14px;
+    }
+
+    #mtLogoutBtn{
+      position:fixed;
+      top:15px;
+      right:15px;
+      z-index:99999;
+      background:#222831;
+      color:white;
+      border:1px solid #39414b;
+      border-radius:10px;
+      padding:9px 13px;
+      display:none;
+    }
+  `;
+  document.head.appendChild(authStyle);
+
+  const authScreen = document.createElement("div");
+  authScreen.id = "mtAuthScreen";
+
+  authScreen.innerHTML = `
+    <div class="mt-auth-box">
+      <div class="mt-logo">MT Social</div>
+      <div class="mt-sub" id="mtAuthTitle">अपने अकाउंट में Login करें</div>
+
+      <div id="mtNameWrap" style="display:none">
+        <input id="mtName" type="text" placeholder="आपका नाम">
+      </div>
+
+      <input id="mtEmail" type="email" placeholder="Email">
+      <input id="mtPassword" type="password" placeholder="Password">
+
+      <button class="mt-auth-btn" id="mtAuthButton">Login</button>
+
+      <div style="text-align:center;margin-top:10px">
+        <button class="mt-forgot" id="mtForgot">Password भूल गए?</button>
+      </div>
+
+      <div id="mtAuthMsg"></div>
+
+      <div class="mt-switch">
+        <span id="mtSwitchText">नया अकाउंट है?</span>
+        <button id="mtSwitchBtn">Sign Up</button>
+      </div>
+    </div>
+  `;
+
+  document.body.appendChild(authScreen);
+
+  const logoutBtn = document.createElement("button");
+  logoutBtn.id = "mtLogoutBtn";
+  logoutBtn.textContent = "Logout";
+  document.body.appendChild(logoutBtn);
+
+  let signupMode = false;
+
+  const title = document.getElementById("mtAuthTitle");
+  const nameWrap = document.getElementById("mtNameWrap");
+  const nameInput = document.getElementById("mtName");
+  const emailInput = document.getElementById("mtEmail");
+  const passwordInput = document.getElementById("mtPassword");
+  const authButton = document.getElementById("mtAuthButton");
+  const switchBtn = document.getElementById("mtSwitchBtn");
+  const switchText = document.getElementById("mtSwitchText");
+  const forgotBtn = document.getElementById("mtForgot");
+  const msg = document.getElementById("mtAuthMsg");
+
+  function message(text, error=false){
+    msg.textContent = text;
+    msg.style.color = error ? "#ff7777" : "#ffcc66";
+  }
+
+  function setMode(signup){
+    signupMode = signup;
+
+    if(signup){
+      title.textContent = "नया अकाउंट बनाएं";
+      nameWrap.style.display = "block";
+      authButton.textContent = "Sign Up";
+      switchText.textContent = "पहले से अकाउंट है?";
+      switchBtn.textContent = "Login";
+      forgotBtn.style.display = "none";
+    }else{
+      title.textContent = "अपने अकाउंट में Login करें";
+      nameWrap.style.display = "none";
+      authButton.textContent = "Login";
+      switchText.textContent = "नया अकाउंट है?";
+      switchBtn.textContent = "Sign Up";
+      forgotBtn.style.display = "inline";
+    }
+
+    message("");
+  }
+
+  switchBtn.onclick = function(){
+    setMode(!signupMode);
+  };
+
+  authButton.onclick = async function(){
+    const email = emailInput.value.trim();
+    const password = passwordInput.value;
+    const name = nameInput.value.trim();
+
+    if(!email || !password){
+      message("Email और Password भरें", true);
+      return;
+    }
+
+    if(password.length < 6){
+      message("Password कम से कम 6 अक्षरों का होना चाहिए", true);
+      return;
+    }
+
+    authButton.disabled = true;
+    authButton.textContent = signupMode ? "Account बन रहा है..." : "Login हो रहा है...";
+
+    try{
+      if(signupMode){
+        const { data, error } = await sb.auth.signUp({
+          email: email,
+          password: password,
+          options: {
+            data: {
+              full_name: name
+            },
+            emailRedirectTo: "https://aic606125-svg.github.io/mt-social/"
+          }
+        });
+
+        if(error) throw error;
+
+        if(data.session){
+          message("Account बन गया! 🎉");
+          authScreen.style.display = "none";
+          logoutBtn.style.display = "block";
+        }else{
+          message("Account बन गया! 📧 Email खोलकर verification करें।");
+        }
+
+      }else{
+        const { error } = await sb.auth.signInWithPassword({
+          email: email,
+          password: password
+        });
+
+        if(error) throw error;
+
+        message("Login सफल हुआ! 🎉");
+      }
+
+    }catch(error){
+      console.error(error);
+      message(error.message || "कुछ गलत हो गया", true);
+    }
+
+    authButton.disabled = false;
+    authButton.textContent = signupMode ? "Sign Up" : "Login";
+  };
+
+  forgotBtn.onclick = async function(){
+    const email = emailInput.value.trim();
+
+    if(!email){
+      message("पहले अपना Email डालें", true);
+      return;
+    }
+
+    try{
+      const { error } = await sb.auth.resetPasswordForEmail(email, {
+        redirectTo: "https://aic606125-svg.github.io/mt-social/"
+      });
+
+      if(error) throw error;
+
+      message("Password reset link आपके Email पर भेज दिया गया है 📧");
+
+    }catch(error){
+      message(error.message || "Reset link नहीं भेजा जा सका", true);
+    }
+  };
+
+  logoutBtn.onclick = async function(){
+    await sb.auth.signOut();
+  };
+
+  async function checkUser(){
+    const { data } = await sb.auth.getSession();
+
+    if(data.session){
+      authScreen.style.display = "none";
+      logoutBtn.style.display = "block";
+    }else{
+      authScreen.style.display = "flex";
+      logoutBtn.style.display = "none";
+    }
+  }
+
+  sb.auth.onAuthStateChange(function(event, session){
+    if(session){
+      authScreen.style.display = "none";
+      logoutBtn.style.display = "block";
+    }else{
+      authScreen.style.display = "flex";
+      logoutBtn.style.display = "none";
+    }
+  });
+
+  checkUser();
+
+})();
+  </script>
