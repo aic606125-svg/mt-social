@@ -657,10 +657,12 @@ checkSession();
 
   const authStyle = document.createElement("style");
   authStyle.textContent = `
-    #mtAuthScreen{
+    #mtAuthScree
       position:fixed;
       inset:0;
       z-index:999999;
+      pointer-events:auto !important;
+touch-action:manipulation;
       background:#080a0d;
       color:white;
       display:flex;
