@@ -5,740 +5,628 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MT Social</title>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-*{
-  box-sizing:border-box;
-  margin:0;
-  padding:0;
-}
+*{box-sizing:border-box;margin:0;padding:0}
 
 body{
   font-family:Arial,Helvetica,sans-serif;
   background:#080a0d;
-  color:#fff;
-}
-
-button{
-  border:0;
-  cursor:pointer;
-  font-family:inherit;
-}
-
-.app{
-  max-width:600px;
-  margin:auto;
+  color:white;
   min-height:100vh;
-  background:#080a0d;
-  padding-bottom:80px;
 }
 
-/* HEADER */
-.header{
-  position:sticky;
-  top:0;
-  z-index:10;
-  height:62px;
-  background:#0d1014;
-  border-bottom:1px solid #252930;
+button,input,textarea{
+  font:inherit;
+}
+
+.hidden{display:none!important}
+
+.auth{
+  min-height:100vh;
   display:flex;
   align-items:center;
-  justify-content:space-between;
-  padding:0 16px;
+  justify-content:center;
+  padding:20px;
+}
+
+.auth-box{
+  width:100%;
+  max-width:420px;
+  background:#11151a;
+  border:1px solid #252b32;
+  border-radius:24px;
+  padding:28px 22px;
+  box-shadow:0 20px 60px rgba(0,0,0,.4);
 }
 
 .logo{
+  text-align:center;
+  font-size:36px;
+  font-weight:800;
+  color:#42e695;
+  margin-bottom:8px;
+}
+
+.subtitle{
+  text-align:center;
+  color:#9aa4af;
+  margin-bottom:25px;
+}
+
+.tabs{
+  display:flex;
+  background:#080a0d;
+  border-radius:12px;
+  padding:4px;
+  margin-bottom:20px;
+}
+
+.tabs button{
+  width:50%;
+  border:0;
+  padding:12px;
+  border-radius:9px;
+  background:transparent;
+  color:#9aa4af;
+  cursor:pointer;
+}
+
+.tabs button.active{
+  background:#42e695;
+  color:#07100b;
+  font-weight:bold;
+}
+
+label{
+  display:block;
+  margin:14px 0 7px;
+  color:#dce2e8;
+  font-weight:bold;
+}
+
+input,textarea{
+  width:100%;
+  border:1px solid #303841;
+  background:#080a0d;
+  color:white;
+  padding:13px;
+  border-radius:12px;
+  outline:none;
+}
+
+input:focus,textarea:focus{
+  border-color:#42e695;
+}
+
+.main-btn{
+  width:100%;
+  border:0;
+  padding:14px;
+  margin-top:20px;
+  border-radius:12px;
+  background:#42e695;
+  color:#07100b;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.message{
+  margin-top:15px;
+  padding:12px;
+  border-radius:10px;
+  background:#1a222b;
+  color:#dce2e8;
+  font-size:14px;
+}
+
+.app{
+  max-width:700px;
+  margin:auto;
+  min-height:100vh;
+  padding-bottom:90px;
+}
+
+header{
+  position:sticky;
+  top:0;
+  z-index:10;
+  background:#080a0dee;
+  backdrop-filter:blur(12px);
+  border-bottom:1px solid #252b32;
+  padding:16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.brand{
   font-size:25px;
   font-weight:800;
-  letter-spacing:.5px;
+  color:#42e695;
 }
 
-.logo span{
-  color:#36a3ff;
-}
-
-.header-icons{
-  display:flex;
-  gap:10px;
-}
-
-.icon-btn{
-  width:40px;
-  height:40px;
-  border-radius:50%;
-  background:#191d23;
+.logout{
+  border:1px solid #303841;
+  background:#11151a;
   color:white;
-  font-size:20px;
+  padding:8px 12px;
+  border-radius:10px;
 }
 
-/* STORIES */
 .stories{
   display:flex;
   gap:12px;
   overflow-x:auto;
-  padding:15px;
-  border-bottom:1px solid #20242a;
-}
-
-.stories::-webkit-scrollbar{
-  display:none;
+  padding:16px;
 }
 
 .story{
-  min-width:72px;
+  min-width:70px;
   text-align:center;
   font-size:12px;
-  color:#c9cdd3;
+  color:#b8c0c8;
 }
 
 .story-img{
-  width:62px;
-  height:62px;
+  width:60px;
+  height:60px;
   border-radius:50%;
-  padding:3px;
-  background:linear-gradient(135deg,#38a8ff,#9c4dff,#ff3d81);
-  margin:auto auto 6px;
-}
-
-.story-img div{
-  width:100%;
-  height:100%;
-  border-radius:50%;
-  background:#20252c;
+  margin:auto auto 5px;
   display:flex;
   align-items:center;
   justify-content:center;
-  font-size:27px;
+  background:linear-gradient(135deg,#42e695,#20a4f3);
+  color:#07100b;
+  font-weight:bold;
 }
 
-/* CREATE POST */
-.create{
-  margin:15px;
+.composer,.post{
+  margin:0 16px 15px;
   background:#11151a;
-  border:1px solid #252a31;
-  border-radius:16px;
-  padding:14px;
+  border:1px solid #252b32;
+  border-radius:18px;
+  padding:16px;
 }
 
-.create-top{
-  display:flex;
-  gap:10px;
-  align-items:center;
+.composer textarea{
+  min-height:80px;
+  resize:none;
 }
 
-.avatar{
-  width:42px;
-  height:42px;
-  border-radius:50%;
-  background:linear-gradient(135deg,#188cff,#8b45ff);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:20px;
-  flex-shrink:0;
+.post-name{
+  font-weight:bold;
+  margin-bottom:7px;
 }
 
-.post-input{
-  flex:1;
-  background:#1b2026;
-  color:#aaa;
-  border-radius:22px;
-  padding:12px 15px;
-  border:0;
-  outline:0;
-}
-
-.create-actions{
-  display:flex;
-  justify-content:space-around;
-  margin-top:12px;
-  border-top:1px solid #272c32;
-  padding-top:11px;
-}
-
-.create-actions button{
-  background:transparent;
-  color:#cfd3d8;
-  font-size:14px;
-}
-
-/* POST */
-.post{
-  border-top:1px solid #20242a;
-  border-bottom:1px solid #20242a;
-  padding:15px;
-  background:#0b0e12;
-}
-
-.post-head{
-  display:flex;
-  align-items:center;
-  gap:10px;
-}
-
-.post-user{
-  flex:1;
-}
-
-.post-user strong{
-  display:block;
-  font-size:15px;
-}
-
-.post-user small{
-  color:#858b94;
+.post-time{
+  color:#7f8994;
   font-size:12px;
-}
-
-.more{
-  background:transparent;
-  color:#aaa;
-  font-size:20px;
+  margin-bottom:12px;
 }
 
 .post-text{
-  padding:13px 0;
   line-height:1.5;
-  color:#e7e9ec;
 }
 
-.post-image{
-  width:100%;
-  min-height:220px;
-  border-radius:13px;
-  background:linear-gradient(135deg,#152b42,#29183d);
+.actions{
   display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:55px;
-  margin-bottom:10px;
+  gap:8px;
+  margin-top:15px;
 }
 
-.post-stats{
-  display:flex;
-  justify-content:space-between;
-  color:#888f99;
-  font-size:13px;
-  padding:5px 2px 10px;
-}
-
-.post-actions{
-  display:flex;
-  border-top:1px solid #242930;
-  padding-top:8px;
-}
-
-.post-actions button{
+.actions button{
   flex:1;
-  background:transparent;
-  color:#bfc4ca;
-  padding:9px 3px;
-  font-size:14px;
+  border:1px solid #303841;
+  background:#080a0d;
+  color:#dce2e8;
+  padding:9px;
+  border-radius:10px;
 }
 
-.post-actions button:hover{
-  background:#181c21;
-  border-radius:8px;
-}
-
-.post-actions .liked{
-  color:#ff4d6d;
-}
-
-/* BOTTOM NAV */
-.bottom-nav{
+.bottom{
   position:fixed;
   bottom:0;
   left:50%;
   transform:translateX(-50%);
-  width:min(600px,100%);
-  height:65px;
-  background:#101318;
-  border-top:1px solid #282d34;
+  width:min(700px,100%);
+  background:#11151aee;
+  backdrop-filter:blur(12px);
+  border-top:1px solid #252b32;
   display:flex;
   justify-content:space-around;
-  align-items:center;
-  z-index:20;
+  padding:12px 5px;
 }
 
-.nav-btn{
+.bottom button{
+  border:0;
   background:transparent;
-  color:#8e949c;
-  font-size:22px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:3px;
+  color:#9aa4af;
+  font-size:13px;
 }
 
-.nav-btn span{
-  font-size:10px;
-}
-
-.nav-btn.active{
-  color:#fff;
-}
-
-.add-btn{
-  width:46px;
-  height:46px;
-  border-radius:14px;
-  background:#278cff;
-  color:white;
-  font-size:28px;
-}
-
-/* MODAL */
-.modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,.75);
-  z-index:50;
-  align-items:center;
-  justify-content:center;
-  padding:20px;
-}
-
-.modal-box{
-  width:min(500px,100%);
-  background:#11151a;
-  border:1px solid #30353d;
-  border-radius:18px;
-  padding:20px;
-}
-
-.modal-box h2{
-  margin-bottom:15px;
-}
-
-.modal-box textarea{
-  width:100%;
-  height:130px;
-  resize:none;
-  background:#1b2026;
-  color:#fff;
-  border:1px solid #30353d;
-  border-radius:12px;
-  padding:12px;
-  outline:none;
-}
-
-.modal-buttons{
-  display:flex;
-  gap:10px;
-  margin-top:12px;
-}
-
-.modal-buttons button{
-  flex:1;
-  padding:12px;
-  border-radius:10px;
-}
-
-.cancel{
-  background:#252a31;
-  color:#fff;
-}
-
-.publish{
-  background:#278cff;
-  color:#fff;
-}
-
-/* TOAST */
-.toast{
-  position:fixed;
-  left:50%;
-  bottom:85px;
-  transform:translateX(-50%);
-  background:#fff;
-  color:#111;
-  padding:11px 18px;
-  border-radius:25px;
-  font-size:14px;
-  display:none;
-  z-index:100;
-  box-shadow:0 5px 25px rgba(0,0,0,.4);
+.bottom .plus{
+  background:#42e695;
+  color:#07100b;
+  width:45px;
+  height:45px;
+  border-radius:50%;
+  font-size:25px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<!-- LOGIN / SIGNUP -->
+<div id="authScreen" class="auth">
+  <div class="auth-box">
 
-  <!-- HEADER -->
-  <header class="header">
-    <div class="logo">MT <span>Social</span></div>
+    <div class="logo">MT Social</div>
+    <div class="subtitle">Connect • Share • Enjoy</div>
 
-    <div class="header-icons">
-      <button class="icon-btn" onclick="showToast('Search जल्द आएगा 🔎')">⌕</button>
-      <button class="icon-btn" onclick="showToast('Notifications 🔔')">♧</button>
-    </div>
-  </header>
-
-  <!-- STORIES -->
-  <section class="stories">
-
-    <div class="story">
-      <div class="story-img">
-        <div>➕</div>
-      </div>
-      <span>Your Story</span>
+    <div class="tabs">
+      <button id="loginTab" class="active" onclick="showLogin()">Login</button>
+      <button id="signupTab" onclick="showSignup()">Signup</button>
     </div>
 
-    <div class="story">
-      <div class="story-img">
-        <div>😎</div>
-      </div>
-      <span>Mohit</span>
+    <div id="loginForm">
+      <label>Email</label>
+      <input id="loginEmail" type="email" placeholder="your@email.com">
+
+      <label>Password</label>
+      <input id="loginPassword" type="password" placeholder="Password">
+
+      <button class="main-btn" onclick="login()">Login</button>
     </div>
 
-    <div class="story">
-      <div class="story-img">
-        <div>🔥</div>
-      </div>
-      <span>Friends</span>
+    <div id="signupForm" class="hidden">
+      <label>Name</label>
+      <input id="signupName" type="text" placeholder="Your name">
+
+      <label>Email</label>
+      <input id="signupEmail" type="email" placeholder="your@email.com">
+
+      <label>Password</label>
+      <input id="signupPassword" type="password" placeholder="At least 6 characters">
+
+      <button class="main-btn" onclick="signup()">Create Account</button>
     </div>
 
-    <div class="story">
-      <div class="story-img">
-        <div>😂</div>
-      </div>
-      <span>Comedy</span>
-    </div>
+    <div id="authMessage" class="message hidden"></div>
 
-    <div class="story">
-      <div class="story-img">
-        <div>❤️</div>
-      </div>
-      <span>Love</span>
-    </div>
-
-  </section>
-
-  <!-- CREATE POST -->
-  <section class="create">
-
-    <div class="create-top">
-      <div class="avatar">M</div>
-
-      <button class="post-input" onclick="openPost()">
-        What's on your mind?
-      </button>
-    </div>
-
-    <div class="create-actions">
-      <button onclick="openPost()">📷 Photo</button>
-      <button onclick="openPost()">🎥 Video</button>
-      <button onclick="openPost()">😊 Feeling</button>
-    </div>
-
-  </section>
-
-  <!-- POST 1 -->
-  <article class="post">
-
-    <div class="post-head">
-      <div class="avatar">M</div>
-
-      <div class="post-user">
-        <strong>MT Social</strong>
-        <small>आज • Public 🌎</small>
-      </div>
-
-      <button class="more" onclick="showToast('Post options')">⋮</button>
-    </div>
-
-    <div class="post-text">
-      🎉 Welcome to <b>MT Social</b>!<br>
-      यहाँ अपनी बातें, फोटो और वीडियो शेयर करें।
-      <br><br>
-      ❤️ Connect • Share • Enjoy
-    </div>
-
-    <div class="post-image">
-      🚀
-    </div>
-
-    <div class="post-stats">
-      <span id="likes1">❤️ 12 Likes</span>
-      <span>3 Comments</span>
-    </div>
-
-    <div class="post-actions">
-      <button id="like1" onclick="likePost(1)">♡ Like</button>
-      <button onclick="showToast('Comment box जल्द आएगा 💬')">💬 Comment</button>
-      <button onclick="sharePost()">↗ Share</button>
-    </div>
-
-  </article>
-
-  <!-- POST 2 -->
-  <article class="post">
-
-    <div class="post-head">
-      <div class="avatar">😎</div>
-
-      <div class="post-user">
-        <strong>Mohit</strong>
-        <small>1 घंटे पहले • Public 🌎</small>
-      </div>
-
-      <button class="more" onclick="showToast('Post options')">⋮</button>
-    </div>
-
-    <div class="post-text">
-      आज का दिन शानदार है! 😎🔥
-      <br>
-      MT Social पर मिलते हैं।
-    </div>
-
-    <div class="post-image">
-      😎🔥
-    </div>
-
-    <div class="post-stats">
-      <span id="likes2">❤️ 8 Likes</span>
-      <span>2 Comments</span>
-    </div>
-
-    <div class="post-actions">
-      <button id="like2" onclick="likePost(2)">♡ Like</button>
-      <button onclick="showToast('Comment box जल्द आएगा 💬')">💬 Comment</button>
-      <button onclick="sharePost()">↗ Share</button>
-    </div>
-
-  </article>
-
+  </div>
 </div>
 
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
+<!-- APP -->
+<div id="appScreen" class="app hidden">
 
-  <button class="nav-btn active" onclick="goHome()">
-    🏠
-    <span>Home</span>
-  </button>
+<header>
+  <div class="brand">MT Social</div>
+  <button class="logout" onclick="logout()">Logout</button>
+</header>
 
-  <button class="nav-btn" onclick="showToast('Friends section जल्द आएगा')">
-    👥
-    <span>Friends</span>
-  </button>
+<div class="stories">
+  <div class="story">
+    <div class="story-img">+</div>
+    Your Story
+  </div>
+  <div class="story">
+    <div class="story-img">MT</div>
+    Mohit
+  </div>
+  <div class="story">
+    <div class="story-img">😊</div>
+    Friends
+  </div>
+  <div class="story">
+    <div class="story-img">🔥</div>
+    Trending
+  </div>
+</div>
 
-  <button class="add-btn" onclick="openPost()">＋</button>
+<div class="composer">
+  <textarea id="postText" placeholder="What's on your mind?"></textarea>
+  <button class="main-btn" onclick="createPost()">Post</button>
+</div>
 
-  <button class="nav-btn" onclick="showToast('Messages जल्द आएगा')">
-    💬
-    <span>Messages</span>
-  </button>
+<div id="feed">
 
-  <button class="nav-btn" onclick="showToast('Profile जल्द आएगा')">
-    👤
-    <span>Profile</span>
-  </button>
-
-</nav>
-
-<!-- POST MODAL -->
-<div class="modal" id="postModal">
-
-  <div class="modal-box">
-
-    <h2>Create Post</h2>
-
-    <textarea id="postText"
-      placeholder="आपके दिमाग में क्या चल रहा है?"></textarea>
-
-    <div class="modal-buttons">
-
-      <button class="cancel" onclick="closePost()">
-        Cancel
-      </button>
-
-      <button class="publish" onclick="publishPost()">
-        Publish
-      </button>
-
+  <div class="post">
+    <div class="post-name">MT Social</div>
+    <div class="post-time">Welcome 👋</div>
+    <div class="post-text">
+      Welcome to MT Social! 🎉<br>
+      आपका अपना social platform.
     </div>
 
+    <div class="actions">
+      <button onclick="likePost(this)">❤️ Like</button>
+      <button onclick="commentPost()">💬 Comment</button>
+      <button onclick="sharePost()">↗️ Share</button>
+    </div>
   </div>
 
 </div>
 
-<!-- TOAST -->
-<div class="toast" id="toast"></div>
+<div class="bottom">
+  <button onclick="window.scrollTo({top:0,behavior:'smooth'})">🏠<br>Home</button>
+  <button>👥<br>Friends</button>
+  <button class="plus" onclick="document.getElementById('postText').focus()">+</button>
+  <button>💬<br>Messages</button>
+  <button onclick="showProfile()">👤<br>Profile</button>
+</div>
+
+</div>
 
 <script>
 
-let liked = {
-  1:false,
-  2:false
-};
+/* ==============================
+   SUPABASE SETTINGS
+   ============================== */
 
-function openPost(){
-  document.getElementById("postModal").style.display="flex";
-  document.getElementById("postText").focus();
+const SUPABASE_URL =
+"https://rtlfxlfrktefhgvtjwuc.supabase.co";
+
+/*
+  नीचे अपनी SUPABASE PUBLISHABLE KEY डालें.
+  यह sb_publishable_ से शुरू होगी.
+*/
+const SUPABASE_PUBLISHABLE_KEY =
+sb_publishable_NAbD-ncXJwYvR8gKgL9Ulg_KZaDNrJ-
+
+const supabaseClient =
+  window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+
+
+/* ==============================
+   AUTH SCREEN
+   ============================== */
+
+function showMessage(text){
+  const box=document.getElementById("authMessage");
+  box.textContent=text;
+  box.classList.remove("hidden");
 }
 
-function closePost(){
-  document.getElementById("postModal").style.display="none";
+function showLogin(){
+  document.getElementById("loginForm").classList.remove("hidden");
+  document.getElementById("signupForm").classList.add("hidden");
+
+  document.getElementById("loginTab").classList.add("active");
+  document.getElementById("signupTab").classList.remove("active");
+
+  document.getElementById("authMessage").classList.add("hidden");
 }
 
-function publishPost(){
+function showSignup(){
+  document.getElementById("signupForm").classList.remove("hidden");
+  document.getElementById("loginForm").classList.add("hidden");
 
-  const text = document.getElementById("postText").value.trim();
+  document.getElementById("signupTab").classList.add("active");
+  document.getElementById("loginTab").classList.remove("active");
 
-  if(!text){
-    showToast("पहले कुछ लिखें ✍️");
+  document.getElementById("authMessage").classList.add("hidden");
+}
+
+
+/* ==============================
+   SIGNUP
+   ============================== */
+
+async function signup(){
+
+  const name =
+    document.getElementById("signupName").value.trim();
+
+  const email =
+    document.getElementById("signupEmail").value.trim();
+
+  const password =
+    document.getElementById("signupPassword").value;
+
+  if(!name || !email || !password){
+    showMessage("कृपया सभी जानकारी भरें।");
     return;
   }
 
-  const post = document.createElement("article");
+  if(password.length < 6){
+    showMessage("Password कम से कम 6 characters का होना चाहिए।");
+    return;
+  }
 
+  showMessage("Account बनाया जा रहा है...");
+
+  const {data,error} =
+    await supabaseClient.auth.signUp({
+      email:email,
+      password:password,
+      options:{
+        data:{
+          name:name
+        }
+      }
+    });
+
+  if(error){
+    showMessage(error.message);
+    return;
+  }
+
+  if(data.session){
+    openApp(data.user);
+  }else{
+    showMessage(
+      "Account बन गया! 📧 अपने email में confirmation link खोलें, फिर Login करें।"
+    );
+  }
+}
+
+
+/* ==============================
+   LOGIN
+   ============================== */
+
+async function login(){
+
+  const email =
+    document.getElementById("loginEmail").value.trim();
+
+  const password =
+    document.getElementById("loginPassword").value;
+
+  if(!email || !password){
+    showMessage("Email और password भरें।");
+    return;
+  }
+
+  showMessage("Login हो रहा है...");
+
+  const {data,error} =
+    await supabaseClient.auth.signInWithPassword({
+      email:email,
+      password:password
+    });
+
+  if(error){
+    showMessage(error.message);
+    return;
+  }
+
+  openApp(data.user);
+}
+
+
+/* ==============================
+   LOGOUT
+   ============================== */
+
+async function logout(){
+
+  await supabaseClient.auth.signOut();
+
+  document.getElementById("appScreen")
+    .classList.add("hidden");
+
+  document.getElementById("authScreen")
+    .classList.remove("hidden");
+
+  showLogin();
+}
+
+
+/* ==============================
+   OPEN APP
+   ============================== */
+
+function openApp(user){
+
+  document.getElementById("authScreen")
+    .classList.add("hidden");
+
+  document.getElementById("appScreen")
+    .classList.remove("hidden");
+
+}
+
+
+/* ==============================
+   CHECK EXISTING SESSION
+   ============================== */
+
+async function checkSession(){
+
+  const {data} =
+    await supabaseClient.auth.getSession();
+
+  if(data.session){
+    openApp(data.session.user);
+  }else{
+    document.getElementById("authScreen")
+      .classList.remove("hidden");
+
+    document.getElementById("appScreen")
+      .classList.add("hidden");
+  }
+}
+
+
+/* ==============================
+   DEMO POST
+   ============================== */
+
+function createPost(){
+
+  const textarea =
+    document.getElementById("postText");
+
+  const text=textarea.value.trim();
+
+  if(!text){
+    alert("पहले कुछ लिखें।");
+    return;
+  }
+
+  const post=document.createElement("div");
   post.className="post";
 
   post.innerHTML=`
+    <div class="post-name">You</div>
+    <div class="post-time">Just now</div>
+    <div class="post-text"></div>
 
-    <div class="post-head">
-
-      <div class="avatar">M</div>
-
-      <div class="post-user">
-        <strong>Mohit</strong>
-        <small>अभी • Public 🌎</small>
-      </div>
-
-      <button class="more"
-        onclick="showToast('Post options')">⋮</button>
-
-    </div>
-
-    <div class="post-text">
-      ${escapeHTML(text)}
-    </div>
-
-    <div class="post-stats">
-      <span>❤️ 0 Likes</span>
-      <span>0 Comments</span>
-    </div>
-
-    <div class="post-actions">
-
-      <button onclick="this.classList.toggle('liked')">
-        ♡ Like
-      </button>
-
-      <button onclick="showToast('Comment box जल्द आएगा 💬')">
-        💬 Comment
-      </button>
-
-      <button onclick="sharePost()">
-        ↗ Share
-      </button>
-
+    <div class="actions">
+      <button onclick="likePost(this)">❤️ Like</button>
+      <button onclick="commentPost()">💬 Comment</button>
+      <button onclick="sharePost()">↗️ Share</button>
     </div>
   `;
 
-  const app=document.querySelector(".app");
+  post.querySelector(".post-text").textContent=text;
 
-  const create=document.querySelector(".create");
+  document.getElementById("feed")
+    .prepend(post);
 
-  app.insertBefore(post,create.nextSibling);
-
-  document.getElementById("postText").value="";
-
-  closePost();
-
-  showToast("Post published 🎉");
+  textarea.value="";
 }
 
-function escapeHTML(text){
-
-  const div=document.createElement("div");
-
-  div.textContent=text;
-
-  return div.innerHTML;
-}
-
-function likePost(id){
-
-  liked[id]=!liked[id];
-
-  const button=document.getElementById("like"+id);
-  const count=document.getElementById("likes"+id);
-
-  let number = id===1 ? 12 : 8;
-
-  if(liked[id]){
-
-    number++;
-
-    button.classList.add("liked");
-    button.innerHTML="♥ Liked";
-
+function likePost(button){
+  if(button.textContent.includes("❤️ Like")){
+    button.textContent="❤️ Liked";
   }else{
-
-    button.classList.remove("liked");
-    button.innerHTML="♡ Like";
-
+    button.textContent="❤️ Like";
   }
+}
 
-  count.innerHTML="❤️ "+number+" Likes";
+function commentPost(){
+  alert("Comments feature अगली update में आएगा।");
 }
 
 function sharePost(){
-
   if(navigator.share){
-
     navigator.share({
       title:"MT Social",
-      text:"MT Social पर यह पोस्ट देखें!"
-    }).catch(()=>{});
-
+      text:"MT Social पर यह post देखें!"
+    });
   }else{
-
-    showToast("Share link तैयार है 🔗");
-
+    alert("Share feature आपके browser में उपलब्ध नहीं है।");
   }
 }
 
-function goHome(){
-
-  window.scrollTo({
-    top:0,
-    behavior:"smooth"
-  });
-
+function showProfile(){
+  alert("Profile feature अगली update में आएगा।");
 }
 
-function showToast(message){
 
-  const toast=document.getElementById("toast");
+/* START */
 
-  toast.innerHTML=message;
-
-  toast.style.display="block";
-
-  clearTimeout(window.toastTimer);
-
-  window.toastTimer=setTimeout(()=>{
-
-    toast.style.display="none";
-
-  },2000);
-
-}
-
-/* Make sure the app is visible immediately */
-document.addEventListener("DOMContentLoaded",function(){
-
-  document.body.style.visibility="visible";
-
-});
+checkSession();
 
 </script>
 
 </body>
-        </html>
+</html>
