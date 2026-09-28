@@ -652,11 +652,14 @@ const SUPABASE_URL =
 const SUPABASE_PUBLISHABLE_KEY =
 "sb_publishable_NAbD-ncXJwYvR8gKgL9Ulg_KZaDNrJ-";
 
-const supabaseClient =
-window.supabase.createClient(
-  SUPABASE_URL,
-  SUPABASE_PUBLISHABLE_KEY
-);
+let supabaseClient = null;
+
+if (window.supabase) {
+  supabaseClient = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_PUBLISHABLE_KEY
+  );
+}
 
 
 /* ==================================================
