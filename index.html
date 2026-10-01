@@ -3,101 +3,1139 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0b8f6a">
 <title>MT Social 🇮🇳</title>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <style>
-body{margin:0;font-family:Arial,sans-serif;background:#f2f4f7;color:#111;padding-bottom:70px}
-header{background:#fff;padding:15px;position:sticky;top:0;box-shadow:0 1px 5px #ccc}
-.logo{font-size:25px;font-weight:bold;color:#087f5b}.tag{font-size:12px;color:#666}
-.wrap{max-width:600px;margin:auto;padding:15px}.card{background:#fff;padding:18px;border-radius:16px;margin-bottom:15px;box-shadow:0 2px 8px #ddd}
-input,textarea{width:100%;box-sizing:border-box;padding:13px;margin:6px 0;border:1px solid #ddd;border-radius:10px;font-size:15px}
-button{border:0;border-radius:10px;padding:12px 16px;background:#087f5b;color:white;font-weight:bold;margin:4px;cursor:pointer}
-.secondary{background:#e7f4ef;color:#087f5b}.hidden{display:none}.nav{position:fixed;bottom:0;left:0;right:0;background:#fff;padding:10px;text-align:center;box-shadow:0 -2px 8px #ddd}.post{white-space:pre-wrap;line-height:1.5}.avatar{width:65px;height:65px;border-radius:50%;background:#087f5b;color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,sans-serif;
+  background:#f3f5f7;
+  color:#111;
+}
+header{
+  background:white;
+  padding:18px 20px;
+  box-shadow:0 2px 10px #0002;
+}
+.logo{
+  font-size:30px;
+  font-weight:bold;
+  color:#087f61;
+}
+.tag{
+  color:#666;
+  margin-top:5px;
+}
+.wrap{
+  max-width:650px;
+  margin:auto;
+  padding:25px 16px 100px;
+}
+.card{
+  background:white;
+  border-radius:22px;
+  padding:25px;
+  margin-bottom:20px;
+  box-shadow:0 5px 20px #0001;
+}
+h1{
+  font-size:32px;
+  margin:10px 0 25px;
+}
+.tabs{
+  display:flex;
+  gap:12px;
+  margin-bottom:18px;
+}
+button{
+  border:0;
+  border-radius:12px;
+  padding:14px 20px;
+  font-size:17px;
+  font-weight:bold;
+  background:#0b8f6a;
+  color:white;
+  cursor:pointer;
+}
+button.secondary{
+  background:#e6f3ef;
+  color:#087f61;
+}
+button:disabled{
+  opacity:.6;
+}
+input,textarea{
+  width:100%;
+  border:2px solid #ddd;
+  border-radius:14px;
+  padding:15px;
+  font-size:17px;
+  margin:7px 0 12px;
+  outline:none;
+}
+input:focus,textarea:focus{
+  border-color:#0b8f6a;
+}
+textarea{
+  min-height:110px;
+}
+.form{
+  display:none;
+}
+.form.active{
+  display:block;
+}
+.msg{
+  padding:12px;
+  border-radius:12px;
+  margin:12px 0;
+  background:#edf8f3;
+  color:#075b45;
+  display:none;
+  line-height:1.5;
+}
+.error{
+  background:#fff0f0;
+  color:#a00000;
+}
+.hidden{
+  display:none!important;
+}
+.post{
+  border-top:1px solid #eee;
+  padding:15px 0;
+}
+.post:first-child{
+  border-top:0;
+}
+.postname{
+  font-weight:bold;
+}
+.posttime{
+  color:#888;
+  font-size:12px;
+  margin:4px 0 8px;
+}
+.posttext{
+  font-size:17px;
+  line-height:1.5;
+  white-space:pre-wrap;
+}
+.nav{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  background:white;
+  border-top:1px solid #ddd;
+  padding:10px;
+  display:flex;
+  justify-content:center;
+  gap:10px;
+  z-index:10;
+}
+.nav button{
+  font-size:14px;
+  padding:11px 16px;
+}
+.avatar{
+  width:70px;
+  height:70px;
+  border-radius:50%;
+  background:#0b8f6a;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:30px;
+  font-weight:bold;
+}
+.small{
+  color:#666;
+  font-size:13px;
+}
 </style>
 </head>
+
 <body>
-<header><div class="logo">MT Social 🇮🇳</div><div class="tag">भारत के लिए • भारत का अपना social app</div></header>
+
+<header>
+  <div class="logo">MT Social 🇮🇳</div>
+  <div class="tag">भारत के लिए • भारत का अपना social app</div>
+</header>
+
 <div class="wrap">
-<section id="auth" class="card">
-<h2>MT Social में स्वागत है 👋</h2>
-<button onclick="loginBox()">Login</button><button class="secondary" onclick="signupBox()">Signup</button>
-<div id="loginForm">
-<input id="email" type="email" placeholder="Email"><input id="password" type="password" placeholder="Password">
-<button onclick="login()">Login करें</button>
+
+<!-- LOGIN / SIGNUP -->
+<section id="authCard" class="card">
+
+<h1>MT Social में स्वागत है 👋</h1>
+
+<div class="tabs">
+  <button id="loginTab" onclick="showLogin()">Login</button>
+  <button id="signupTab" class="secondary" onclick="showSignup()">Signup</button>
 </div>
-<div id="signupForm" class="hidden">
-<input id="name" placeholder="आपका नाम"><input id="semail" type="email" placeholder="Email"><input id="spassword" type="password" placeholder="Password">
-<button onclick="signup()">Account बनाएं</button>
+
+<div id="authMsg" class="msg"></div>
+
+<!-- LOGIN -->
+<div id="loginForm" class="form active">
+
+<input
+ id="loginEmail"
+ type="email"
+ placeholder="Email"
+ autocomplete="email">
+
+<input
+ id="loginPassword"
+ type="password"
+ placeholder="Password"
+ autocomplete="current-password">
+
+<button id="loginBtn" onclick="login()">
+Login करें
+</button>
+
 </div>
-<p id="msg"></p>
+
+<!-- SIGNUP -->
+<div id="signupForm" class="form">
+
+<input
+ id="signupName"
+ type="text"
+ placeholder="आपका नाम"
+ autocomplete="name">
+
+<input
+ id="signupEmail"
+ type="email"
+ placeholder="Email"
+ autocomplete="email">
+
+<input
+ id="signupPassword"
+ type="password"
+ placeholder="Password (कम से कम 6 अक्षर)"
+ autocomplete="new-password">
+
+<button id="signupBtn" onclick="signup()">
+Account बनाएं
+</button>
+
+</div>
+
 </section>
 
-<section id="app" class="hidden">
-<div id="home">
-<div class="card"><h2>नमस्ते, <span id="hello">दोस्त</span> 👋</h2>
-<textarea id="postText" rows="4" placeholder="आज क्या कहना चाहते हैं? ✍️"></textarea>
-<button onclick="createPost()">Post करें</button></div>
-<div id="feed"></div>
+
+<!-- HOME -->
+<section id="homePage" class="hidden">
+
+<div class="card">
+
+<h2>🏠 Home</h2>
+
+<p id="welcomeText">
+MT Social में आपका स्वागत है 🇮🇳
+</p>
+
 </div>
-<div id="profile" class="hidden card">
-<div class="avatar" id="avatar">M</div><h2 id="pname">नाम</h2><p id="pemail"></p>
-<input id="editName" placeholder="नाम"><input id="username" placeholder="@username"><textarea id="bio" placeholder="Bio"></textarea>
-<button onclick="saveProfile()">Profile Save करें</button><button class="secondary" onclick="logout()">Logout</button>
-<p id="pmsg"></p>
+
+
+<div class="card">
+
+<h2>✍️ नई पोस्ट</h2>
+
+<textarea
+ id="postText"
+ placeholder="आज क्या सोच रहे हो?"></textarea>
+
+<button onclick="createPost()">
+Post करें
+</button>
+
+<div id="postMsg" class="msg"></div>
+
 </div>
+
+
+<div class="card">
+
+<h2>📰 Feed</h2>
+
+<div id="feed">
+अभी कोई पोस्ट नहीं है।
+</div>
+
+</div>
+
 </section>
+
+
+<!-- PROFILE -->
+<section id="profilePage" class="hidden">
+
+<div class="card">
+
+<h2>👤 मेरा Account</h2>
+
+<div id="avatar" class="avatar">M</div>
+
+<p id="profileEmail" class="small"></p>
+
+<input
+ id="profileName"
+ placeholder="नाम">
+
+<input
+ id="profileUsername"
+ placeholder="Username">
+
+<textarea
+ id="profileBio"
+ placeholder="अपने बारे में लिखें"></textarea>
+
+<button onclick="saveProfile()">
+Profile Save करें
+</button>
+
+<button
+ class="secondary"
+ onclick="logout()"
+ style="margin-left:8px">
+Logout
+</button>
+
+<div id="profileMsg" class="msg"></div>
+
 </div>
-<div id="nav" class="nav hidden"><button onclick="home()">🏠 Home</button><button onclick="profile()">👤 Profile</button></div>
+
+</section>
+
+</div>
+
+
+<!-- BOTTOM NAV -->
+<div id="nav" class="nav hidden">
+
+<button onclick="home()">
+🏠 Home
+</button>
+
+<button onclick="profile()">
+👤 Account
+</button>
+
+<button onclick="focusPost()">
+➕ Post
+</button>
+
+</div>
+
 
 <script>
-const URL="https://rtlfxlfrktefhgvtjwuc.supabase.co";
-const KEY="sb_publishable_NAbD-ncXJwYvR8gKgL9Ulg_KZaDNrJ-";
-let supa,user;
 
-function loginBox(){document.getElementById("loginForm").classList.remove("hidden");document.getElementById("signupForm").classList.add("hidden")}
-function signupBox(){document.getElementById("signupForm").classList.remove("hidden");document.getElementById("loginForm").classList.add("hidden")}
+/* =========================
+   SUPABASE
+========================= */
+
+const SUPABASE_URL =
+"https://rtlfxlfrktefhgvtjwuc.supabase.co";
+
+const SUPABASE_KEY =
+"sb_publishable_NAbD-ncXJwYvR8gKgL9Ulg_KZaDNrJ-";
+
+/* IMPORTANT:
+   Supabase library ऊपर पहले ही load हो चुकी है.
+*/
+
+const supa =
+window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+let currentUser = null;
+
+
+/* =========================
+   HELPER
+========================= */
+
+function $(id){
+  return document.getElementById(id);
+}
+
+function message(id,text,error=false){
+
+  const box=$(id);
+
+  box.textContent=text;
+
+  box.style.display=text ? "block":"none";
+
+  box.className=
+    error ? "msg error":"msg";
+}
+
+
+/* =========================
+   LOGIN / SIGNUP TABS
+========================= */
+
+function showLogin(){
+
+  $("loginForm").classList.add("active");
+
+  $("signupForm").classList.remove("active");
+
+  $("loginTab").classList.remove("secondary");
+
+  $("signupTab").classList.add("secondary");
+
+  message("authMsg","");
+}
+
+
+function showSignup(){
+
+  $("signupForm").classList.add("active");
+
+  $("loginForm").classList.remove("active");
+
+  $("signupTab").classList.remove("secondary");
+
+  $("loginTab").classList.add("secondary");
+
+  message("authMsg","");
+}
+
+
+/* =========================
+   SIGNUP
+========================= */
 
 async function signup(){
- let email=document.getElementById("semail").value.trim(),password=document.getElementById("spassword").value,name=document.getElementById("name").value.trim();
- let r=await supa.auth.signUp({email,password,data:{name}});
- document.getElementById("msg").textContent=r.error?r.error.message:"Signup हो गया। Email verification करें अगर मांगा जाए।";
+
+  const name=
+    $("signupName").value.trim();
+
+  const email=
+    $("signupEmail").value.trim().toLowerCase();
+
+  const password=
+    $("signupPassword").value;
+
+  if(!name){
+
+    message(
+      "authMsg",
+      "कृपया अपना नाम डालें।",
+      true
+    );
+
+    return;
+  }
+
+  if(!email || !email.includes("@")){
+
+    message(
+      "authMsg",
+      "कृपया सही Email डालें।",
+      true
+    );
+
+    return;
+  }
+
+  if(password.length < 6){
+
+    message(
+      "authMsg",
+      "Password कम से कम 6 अक्षर का होना चाहिए।",
+      true
+    );
+
+    return;
+  }
+
+
+  $("signupBtn").disabled=true;
+
+  message(
+    "authMsg",
+    "Account बनाया जा रहा है..."
+  );
+
+
+  try{
+
+    const result=
+      await supa.auth.signUp({
+
+        email:email,
+
+        password:password,
+
+        options:{
+          data:{
+            name:name
+          }
+        }
+
+      });
+
+
+    if(result.error){
+
+      throw result.error;
+
+    }
+
+
+    /* अगर email verification जरूरी है */
+
+    if(!result.data.session){
+
+      message(
+        "authMsg",
+        "✅ Account बन गया!\n\n📧 आपके Email पर verification link भेजा गया है।\n\nEmail verify करने के बाद Login करें।"
+      );
+
+      $("loginEmail").value=email;
+
+      setTimeout(showLogin,1500);
+
+      return;
+    }
+
+
+    currentUser=result.data.user;
+
+    localStorage.setItem(
+      "mt_name",
+      name
+    );
+
+    message(
+      "authMsg",
+      "✅ Account बन गया!"
+    );
+
+    setTimeout(
+      showApp,
+      500
+    );
+
+
+  }catch(error){
+
+    message(
+      "authMsg",
+      getError(error),
+      true
+    );
+
+  }finally{
+
+    $("signupBtn").disabled=false;
+
+  }
+
 }
+
+
+/* =========================
+   LOGIN
+========================= */
+
 async function login(){
- let r=await supa.auth.signInWithPassword({email:document.getElementById("email").value.trim(),password:document.getElementById("password").value});
- if(r.error){document.getElementById("msg").textContent=r.error.message;return} user=r.data.user;openApp();
-}
-async function logout(){await supa.auth.signOut();location.reload()}
-function openApp(){document.getElementById("auth").classList.add("hidden");document.getElementById("app").classList.remove("hidden");document.getElementById("nav").classList.remove("hidden");loadProfile();loadPosts()}
-function home(){document.getElementById("home").classList.remove("hidden");document.getElementById("profile").classList.add("hidden")}
-function profile(){document.getElementById("home").classList.add("hidden");document.getElementById("profile").classList.remove("hidden");loadProfile()}
 
-async function loadProfile(){
- let r=await supa.from("profiles").select("*").eq("id",user.id).maybeSingle();
- let n=r.data?.name||user.user_metadata?.name||"MT User";
- document.getElementById("hello").textContent=n;document.getElementById("pname").textContent=n;document.getElementById("pemail").textContent=user.email||"";
- document.getElementById("editName").value=r.data?.name||n;document.getElementById("username").value=r.data?.username||"";document.getElementById("bio").value=r.data?.bio||"";document.getElementById("avatar").textContent=n[0]?.toUpperCase()||"M";
-}
-async function saveProfile(){
- let r=await supa.from("profiles").upsert({id:user.id,name:document.getElementById("editName").value.trim(),username:document.getElementById("username").value.trim(),bio:document.getElementById("bio").value.trim()});
- document.getElementById("pmsg").textContent=r.error?r.error.message:"Profile save हो गई ✅";loadProfile();
-}
-async function createPost(){
- let content=document.getElementById("postText").value.trim();if(!content)return;
- let r=await supa.from("posts").insert({user_id:user.id,content});
- if(r.error){alert("Post save नहीं हुई। पहले Supabase database setup करें.");return}
- document.getElementById("postText").value="";loadPosts();
-}
-async function loadPosts(){
- let box=document.getElementById("feed"),r=await supa.from("posts").select("id,content,created_at").order("created_at",{ascending:false});
- if(r.error){box.innerHTML='<div class="card">Database setup अभी बाकी है।</div>';return}
- box.innerHTML=r.data.length?r.data.map(p=>'<div class="card"><div class="post">'+safe(p.content)+'</div><button onclick="like(this)">❤️ Like</button><button onclick="alert(\'Comment अगली update में आएगा 💬\')">💬 Comment</button></div>').join(""):'<div class="card">अभी कोई post नहीं है। पहली post आप करें! 🎉</div>';
-}
-function safe(s){return s.replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]))}
-function like(b){b.textContent=b.textContent.includes("Liked")?"❤️ Like":"💚 Liked"}
+  const email=
+    $("loginEmail").value.trim().toLowerCase();
 
-const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2";s.onload=async()=>{
-supa=window.supabase.createClient(URL,KEY);
-let r=await supa.auth.getSession();if(r.data.session){user=r.data.session.user;openApp()}
-supa.auth.onAuthStateChange((e,session)=>{if(session&&!user){user=session.user;openApp()}});
-};document.head.appendChild(s);
+  const password=
+    $("loginPassword").value;
+
+
+  if(!email || !password){
+
+    message(
+      "authMsg",
+      "Email और Password दोनों डालें।",
+      true
+    );
+
+    return;
+  }
+
+
+  $("loginBtn").disabled=true;
+
+  message(
+    "authMsg",
+    "Login हो रहा है..."
+  );
+
+
+  try{
+
+    const result=
+      await supa.auth.signInWithPassword({
+
+        email:email,
+
+        password:password
+
+      });
+
+
+    if(result.error){
+
+      throw result.error;
+
+    }
+
+
+    currentUser=
+      result.data.user;
+
+    message(
+      "authMsg",
+      "✅ Login सफल!"
+    );
+
+
+    setTimeout(
+      showApp,
+      400
+    );
+
+
+  }catch(error){
+
+    message(
+      "authMsg",
+      getError(error),
+      true
+    );
+
+  }finally{
+
+    $("loginBtn").disabled=false;
+
+  }
+
+}
+
+
+/* =========================
+   ERROR MESSAGE
+========================= */
+
+function getError(error){
+
+  const text=
+    String(
+      error?.message ||
+      error ||
+      ""
+    );
+
+  const lower=
+    text.toLowerCase();
+
+
+  if(lower.includes("invalid login credentials")){
+
+    return "❌ Email या Password गलत है।";
+
+  }
+
+
+  if(lower.includes("email not confirmed")){
+
+    return "📧 पहले Email verify करें।";
+
+  }
+
+
+  if(lower.includes("user already registered")){
+
+    return "⚠️ यह Email पहले से registered है। Login करें।";
+
+  }
+
+
+  if(lower.includes("password")){
+
+    return "❌ Password से संबंधित समस्या है। कम से कम 6 अक्षर रखें।";
+
+  }
+
+
+  if(!navigator.onLine){
+
+    return "📡 Internet connection नहीं है।";
+
+  }
+
+
+  return "❌ समस्या: " + text;
+
+}
+
+
+/* =========================
+   APP OPEN
+========================= */
+
+function showApp(){
+
+  $("authCard")
+    .classList.add("hidden");
+
+  $("nav")
+    .classList.remove("hidden");
+
+  home();
+
+  loadProfile();
+
+}
+
+
+/* =========================
+   HOME
+========================= */
+
+function home(){
+
+  if(!currentUser) return;
+
+  $("homePage")
+    .classList.remove("hidden");
+
+  $("profilePage")
+    .classList.add("hidden");
+
+  loadPosts();
+
+}
+
+
+/* =========================
+   PROFILE
+========================= */
+
+function profile(){
+
+  if(!currentUser) return;
+
+  $("homePage")
+    .classList.add("hidden");
+
+  $("profilePage")
+    .classList.remove("hidden");
+
+  loadProfile();
+
+}
+
+
+/* =========================
+   LOAD PROFILE
+========================= */
+
+function loadProfile(){
+
+  if(!currentUser) return;
+
+
+  const meta=
+    currentUser.user_metadata || {};
+
+
+  const name=
+    localStorage.getItem("mt_name") ||
+    meta.name ||
+    "MT User";
+
+
+  $("profileEmail")
+    .textContent=
+    currentUser.email || "";
+
+
+  $("profileName")
+    .value=name;
+
+
+  $("profileUsername")
+    .value=
+    localStorage.getItem(
+      "mt_username"
+    ) || "";
+
+
+  $("profileBio")
+    .value=
+    localStorage.getItem(
+      "mt_bio"
+    ) || "";
+
+
+  $("avatar")
+    .textContent=
+    name.charAt(0).toUpperCase();
+
+
+  $("welcomeText")
+    .textContent=
+    "नमस्ते " +
+    name +
+    " 👋 MT Social में आपका स्वागत है 🇮🇳";
+
+}
+
+
+/* =========================
+   SAVE PROFILE
+========================= */
+
+function saveProfile(){
+
+  const name=
+    $("profileName")
+    .value.trim();
+
+  const username=
+    $("profileUsername")
+    .value.trim();
+
+  const bio=
+    $("profileBio")
+    .value.trim();
+
+
+  if(!name){
+
+    message(
+      "profileMsg",
+      "नाम खाली नहीं हो सकता।",
+      true
+    );
+
+    return;
+  }
+
+
+  localStorage.setItem(
+    "mt_name",
+    name
+  );
+
+  localStorage.setItem(
+    "mt_username",
+    username
+  );
+
+  localStorage.setItem(
+    "mt_bio",
+    bio
+  );
+
+
+  $("avatar")
+    .textContent=
+    name.charAt(0).toUpperCase();
+
+
+  $("welcomeText")
+    .textContent=
+    "नमस्ते " +
+    name +
+    " 👋 MT Social में आपका स्वागत है 🇮🇳";
+
+
+  message(
+    "profileMsg",
+    "✅ Profile Save हो गई।"
+  );
+
+}
+
+
+/* =========================
+   LOGOUT
+========================= */
+
+async function logout(){
+
+  await supa.auth.signOut();
+
+  currentUser=null;
+
+  $("authCard")
+    .classList.remove("hidden");
+
+  $("homePage")
+    .classList.add("hidden");
+
+  $("profilePage")
+    .classList.add("hidden");
+
+  $("nav")
+    .classList.add("hidden");
+
+  showLogin();
+
+}
+
+
+/* =========================
+   POSTS
+========================= */
+
+function getPosts(){
+
+  try{
+
+    return JSON.parse(
+      localStorage.getItem(
+        "mt_posts"
+      ) || "[]"
+    );
+
+  }catch(e){
+
+    return [];
+
+  }
+
+}
+
+
+function savePosts(posts){
+
+  localStorage.setItem(
+    "mt_posts",
+    JSON.stringify(posts)
+  );
+
+}
+
+
+function createPost(){
+
+  if(!currentUser){
+
+    return;
+
+  }
+
+
+  const text=
+    $("postText")
+    .value.trim();
+
+
+  if(!text){
+
+    message(
+      "postMsg",
+      "पहले कुछ लिखें।",
+      true
+    );
+
+    return;
+  }
+
+
+  const name=
+    localStorage.getItem(
+      "mt_name"
+    ) ||
+    currentUser.user_metadata?.name ||
+    "MT User";
+
+
+  const posts=
+    getPosts();
+
+
+  posts.unshift({
+
+    name:name,
+
+    text:text,
+
+    time:
+      new Date()
+      .toLocaleString("hi-IN")
+
+  });
+
+
+  savePosts(posts);
+
+
+  $("postText")
+    .value="";
+
+
+  message(
+    "postMsg",
+    "✅ Post हो गई!"
+  );
+
+
+  loadPosts();
+
+}
+
+
+function loadPosts(){
+
+  const posts=
+    getPosts();
+
+
+  const feed=
+    $("feed");
+
+
+  if(!posts.length){
+
+    feed.innerHTML=
+      "<p>अभी कोई पोस्ट नहीं है। अपनी पहली पोस्ट डालें 🇮🇳</p>";
+
+    return;
+
+  }
+
+
+  feed.innerHTML=
+    posts.map(function(post){
+
+      return `
+      <div class="post">
+
+        <div class="postname">
+          👤 ${escapeHTML(post.name)}
+        </div>
+
+        <div class="posttime">
+          ${escapeHTML(post.time)}
+        </div>
+
+        <div class="posttext">
+          ${escapeHTML(post.text)}
+        </div>
+
+      </div>
+      `;
+
+    }).join("");
+
+}
+
+
+function escapeHTML(text){
+
+  return String(text)
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+
+}
+
+
+/* =========================
+   POST BUTTON
+========================= */
+
+function focusPost(){
+
+  home();
+
+  setTimeout(function(){
+
+    $("postText").focus();
+
+  },100);
+
+}
+
+
+/* =========================
+   START APP
+========================= */
+
+async function startApp(){
+
+  try{
+
+    const result=
+      await supa.auth.getSession();
+
+
+    currentUser=
+      result.data.session?.user ||
+      null;
+
+
+    if(currentUser){
+
+      showApp();
+
+    }else{
+
+      $("authCard")
+        .classList.remove("hidden");
+
+    }
+
+
+    supa.auth.onAuthStateChange(
+      function(event,session){
+
+        currentUser=
+          session?.user || null;
+
+      }
+    );
+
+
+  }catch(error){
+
+    message(
+      "authMsg",
+      getError(error),
+      true
+    );
+
+  }
+
+}
+
+
+/* START */
+
+window.addEventListener(
+  "DOMContentLoaded",
+  startApp
+);
+
 </script>
-</body></html>
+
+</body>
+</html>
